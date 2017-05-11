@@ -10,24 +10,25 @@ set -o pipefail
 # echo out each line of the shell as it executes
 set -x
 
+# import common build env vars
+source "$(dirname "$0")/buildrc"
+
 main() {
-  readonly GITBRANCH="${CIRCLE_BRANCH}"
 
   git submodule init                                                    # Pulling submodule
   git submodule update                                                  # Updating submodule
 
-  case "${GITBRANCH}" in
+  case "${CIRCLE_BRANCH}" in
     master)
-      echo "Building with production jekyll config"
-
-      bundle exec jekyll build --destination ./_site/$CF_PATH --baseurl /$CF_PATH
-      # Building jekyll plus the path variable
+      bundle exec jekyll build --destination ./_site/content-guide --baseurl ${SITE_BASEURL}
       ;;
     *)
-      echo "Building with develop jekyll config"
-      bundle exec jekyll build
+      bundle exec jekyll build --destination ${DESTINATION}/ --baseurl "${SITE_BASEURL}"
       ;;
   esac
+
+  bundle exec jekyll build --destination ${DESTINATION}/ --baseurl "${SITE_BASEURL}"
+
 }
 
 main $@

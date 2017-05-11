@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Use the branch name to set jekyll config:
+# - SITE_BASEURL - used in jekyll for site.baseurl
+# - DESTINATION - where to build the site
+
+DESTINATION="${CIRCLE_ARTIFACTS}/_site"
+
+case "${CIRCLE_BRANCH}" in
+  master)
+    readonly SITE_BASEURL="/content-guide"
+    DESTINATION="${DESTINATION}/content-guide"
+    ;;
+  develop)
+    readonly SITE_BASEURL=""
+    ;;
+  *)
+    # Configure jekyll to be statically hosted on circleci
+    readonly SITE_BASEURL="/${CIRCLE_NODE_INDEX}${DESTINATION}"
+    ;;
+esac

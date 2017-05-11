@@ -13,8 +13,11 @@ set -o pipefail
 # echo out each line of the shell as it executes
 set -x
 
+# import common build env vars
+source "$(dirname "$0")/buildrc"
+
 # Run jekyll hyde
-bundle exec jekyll hyde
+bundle exec jekyll hyde --destination "${CIRCLE_ARTIFACTS}"
 
 # we want the link checker to fail if internal links have not correctly
 # appended site.baseurl, so we re-build the site with a non-empty baseurl
